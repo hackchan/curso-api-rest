@@ -21,6 +21,11 @@
   "dependencies": {
     "@hapi/boom": "^9.1.4",
     "@hapi/joi": "^17.1.1",
-    "express": "^4.17.1"
+    "csv-parse": "^4.16.3",
+    "csvtojson": "^2.0.10",
+    "ejs": "^3.1.6",
+    "express": "^4.17.1",
+    "morgan": "^1.10.0",
+    "multer": "^1.4.3"
   }
 }

@@ -30,3 +30,11 @@ PATCH    no Apply      update
 POST     create       no Apply
 DELETE   delete        delete
 ```
+
+## Promise.allSettled
+
+## Utilidades EJS
+
+```ejs
+<%=entity.identidad%>
+```
