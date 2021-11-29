@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   dest: 'public/uploads/',
-  limits: { fileSize: 1000000 }
+  limits: { fileSize: 9000000 }
 })
 
 router.get('/', loadingExcel)
@@ -42,12 +42,21 @@ async function loadingCSV(req, res, next) {
     const codigoEntidad = req.body.entity
     const entidad = await service.listarByOne(codigoEntidad)
     const serviceUpload = new uploadService(req.file)
-    const header = await serviceUpload.csvtojson()
-    const columna = await serviceUpload.columnsHeader(
-      header
-    )
+    const file = await serviceUpload.readfile()
+    const dataCSV = await serviceUpload.csvtojson()
+    const header = dataCSV[0]
+    const headerClean = await serviceUpload.columnsHeader(header)
+    
+
+   
+    /**VALIDACIONES */
+    await serviceUpload.getValidTotalColumnas('ejecucionIngreso',header)
+    await serviceUpload.getValidNamesColumns('ejecucionIngreso',header)
+    await serviceUpload.getValidDatatype('ejecucionIngreso',dataCSV)
+
+
     const configFile = await serviceUpload.getConfigFile(
-      columna,
+      headerClean,
       entidad
     )
     res.send(configFile)

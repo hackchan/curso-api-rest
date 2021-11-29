@@ -1,5 +1,7 @@
 const path = require('path')
 const csvtojson = require('csvtojson')
+const fs= require("fs").promises
+const {cleanJSON} = require('../../../utils/config')
 class uploadsService {
   constructor(file) {
     this.file = file
@@ -8,10 +10,81 @@ class uploadsService {
       '../../../',
       `public/uploads/${this.file.filename}`
     )
-    console.log(this.file)
-    console.log(this.ruta)
-  }
 
+    this.dictionary = require('../../../utils/dictionary.json')
+  }
+  readfile() {
+    return new Promise(async (resolve, reject)=>{
+      try{
+      const file = await fs.readFile(this.ruta, 'latin1')
+      resolve(file)
+     }catch(err){
+       reject(err)
+     }
+    })
+  }
+  async getValidNamesColumns(reportName, reportHeader) {
+    return new Promise(async (resolve, reject)=>{
+         try {
+           const totalColumHeader = Object.keys(reportHeader).length
+           const totalColumnDic = Object.keys(this.dictionary[reportName]).length
+           const columnsValids = Object.keys(this.dictionary[reportName])
+           if(Number(totalColumHeader) > Number(totalColumnDic)){
+              throw new Error(`El archivo enviado tiene mas columnas de las solicitadas en el diccionario de datos, solo de tener las siguientes columnas: ${columnsValids.join()}.`)
+           } else if (totalColumHeader < totalColumnDic) {
+             throw new Error(`El archivo enviado tiene menos columnas de las solicitadas en el diccionario de datos, solo de tener las siguientes columnas: ${columnsValids.join()}`)
+           } else {
+             resolve(true)
+           }         
+         } catch (error) {
+           reject(error)
+         }
+    })
+  }
+  async getValidTotalColumnas(reportName, reportHeader) {
+    return new Promise(async (resolve, reject)=>{
+         try {
+           const reportColumHeader = Object.keys(reportHeader)
+           const columnsValids = Object.keys(this.dictionary[reportName])
+           reportColumHeader.map((column,index)=>{
+              if(column.toLowerCase() !== columnsValids[index].toLowerCase()){
+                throw new Error(`el nombre del encabezado del archivo ${column.toLowerCase()} es diferente al solicitado ${columnsValids[index].toLowerCase()}`)
+              }
+              return column
+           })
+           resolve(true)
+         } catch (error) {
+           reject(error)
+         }
+    })
+  }
+  
+  async getValidDatatype(reportName, reportData) {
+    return new Promise(async (resolve, reject)=>{
+         try {
+           const dictionary = this.dictionary[reportName]
+           for (let fila of reportData) {
+             const data = await cleanJSON(fila)
+             const keysData = Object.keys(data)
+             const filaverify = {}
+             for(let campo of keysData){
+               const campoData = data[campo]
+               const regla = dictionary[campo]
+               if(regla.tipo === 'Number'){
+                  campoData = Number(campoData)
+               }
+               console.log('campoData:',campoData)
+               console.log('tipo:', typeof(campoData))
+               console.log('regla:',regla)
+             }
+           
+           }
+          resolve(true)
+         } catch (error) {
+           reject(error)
+         }
+    })
+  }
   async csvtojson() {
     try {
       const response = await csvtojson({
@@ -22,29 +95,49 @@ class uploadsService {
         trim: true,
         defaultEncoding: 'utf8',
         output: 'json'
-      }).fromFile(this.ruta, { encoding: 'utf-8' })
-      return await Promise.resolve(response[0])
+      }).fromFile(this.ruta, { encoding: 'utf8' })
+      return await Promise.resolve(response)
     } catch (error) {
       return await Promise.reject(error)
     }
+  }
+  
+  findColumsDate(columns) {
+    return new Promise(async (resolve, reject)=>{
+      try{
+        const fechas = columns.split(',').filter((col) =>{
+          return col.startsWith('FECHA')
+        }).join()
+        resolve(fechas)
+     }catch(err){
+       reject(err)
+     }
+    })
   }
 
   async columnsHeader(header) {
     try {
       const columnas = Object.keys(header)
       const columreplace = columnas.map((celda) => {
-        return celda
-          .toUpperCase()
-          .trim()
-          .replace(new RegExp(' ', 'g'), '_')
-          .normalize('NFD')
-          .replace(/[\u0300-\u036f]/g, '')
-          .replace('(', '')
-          .replace(')', '')
-          .replace('_DE_', '_')
-          .replace('_DEL_', '_')
-          .replace('%', 'PORCENTAJE')
-          .replace('A�O', 'ANIO')
+      
+        return celda.normalize('NFD').replace(/[\u0300-\u036f]/g,"")
+        .replace(/á/gi,"a")
+        .replace(/é/gi,"e")
+        .replace(/í/gi,"i")
+        .replace(/ó/gi,"o")
+        .replace(/ú/gi,"u")
+        .replace(/ñ/gi,"n")
+        .trim()
+        .toUpperCase()
+        .replace(new RegExp(' ', 'g'), '_')
+        .replace('(', '')
+        .replace(')', '')
+        .replace('%', 'PORCENTAJE')
+        .replace('A�O', 'ANIO')
+        .replace('ANO', 'ANIO')
+        
+          
+          
       })
       return await Promise.resolve(columreplace.join())
     } catch (error) {
@@ -58,7 +151,7 @@ class uploadsService {
       sector: entidad.sector,
       sub_sector: entidad.subsector,
       bad_records_path: `/mnt/plata/gpif/${entidad.dbe}/bad_records`,
-      destination_path: `plata/gpif/${entidad.dbe}/Backups`,
+      destination_path: `/plata/gpif/${entidad.dbe}/Backups`,
       origin_data_type: 'CSV',
       source_options: {
         sep: '|',
@@ -66,7 +159,7 @@ class uploadsService {
         header: 'true'
       },
       column_names: columna,
-      date_columns: 'FECHA_REPORTE',
+      date_columns: await this.findColumsDate(columna),
       cast_columns: {
         ANIO_REPORTE: 'int',
         ENTIDAD_REPORTANTE: 'bigint'
