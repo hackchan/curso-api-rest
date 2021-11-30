@@ -3,15 +3,24 @@ const moment = require('moment')
 const removeObjDuplic = (report) => {
   return new Promise((resolve, reject)=>{
     try {
-
+      let findIndex = 0
       let filtrados = report.filter((actual, indice, arreglo)=>{
-          console.log('actual:',actual)
-          console.log('indice:',indice)
-          console.log('arreglo:',arreglo)
-          let arr = arreglo.findIndex(valorArreglo =>JSON.stringify(valorArreglo) === JSON.stringify(actual)) !== indice
-          return arr
+          if(arreglo.findIndex((valorArreglo) =>{
+            return JSON.stringify(valorArreglo) === JSON.stringify(actual) 
+            })!== indice){
+              findIndex = indice
+            }
+          return arreglo.findIndex((valorArreglo) =>{
+                return JSON.stringify(valorArreglo) === JSON.stringify(actual) 
+                })!== indice
+   
       })
-      console.log('filtrados:', filtrados)
+
+      if(filtrados.length > 0){
+        throw new Error(
+          `fila=> ${findIndex} error=> se esta repitiendo la siguiente informacion ${JSON.stringify(filtrados)} `
+        )
+      }
       
       resolve(true)
       
