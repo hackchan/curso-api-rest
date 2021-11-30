@@ -1,4 +1,26 @@
 const moment = require('moment')
+
+const removeObjDuplic = (report) => {
+  return new Promise((resolve, reject)=>{
+    try {
+
+      let filtrados = report.filter((actual, indice, arreglo)=>{
+          console.log('actual:',actual)
+          console.log('indice:',indice)
+          console.log('arreglo:',arreglo)
+          let arr = arreglo.findIndex(valorArreglo =>JSON.stringify(valorArreglo) === JSON.stringify(actual)) !== indice
+          return arr
+      })
+      console.log('filtrados:', filtrados)
+      
+      resolve(true)
+      
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 const cleanJSON = (fila) => {
   return new Promise((resolve, reject) => {
     try {
@@ -153,5 +175,6 @@ module.exports = {
   findSeparadorPunto,
   validIsNumber,
   isValidData,
-  validFormatDate
+  validFormatDate,
+  removeObjDuplic
 }

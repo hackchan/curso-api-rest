@@ -53,6 +53,7 @@ async function loadingCSV(req, res, next) {
     await serviceUpload.getValidTotalColumnas('ejecucionIngreso',header)
     await serviceUpload.getValidNamesColumns('ejecucionIngreso',header)
     await serviceUpload.getValidDatatype('ejecucionIngreso',dataCSV)
+    
 
 
     const configFile = await serviceUpload.getConfigFile(
