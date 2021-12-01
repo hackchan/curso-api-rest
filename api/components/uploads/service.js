@@ -9,7 +9,8 @@ const {
   validIsNumber,
   isValidData,
   validFormatDate,
-  removeObjDuplic
+  removeObjDuplic,
+  findDuplicateObject
 } = require('../../../utils/config')
 class uploadsService {
   constructor(file) {
@@ -92,7 +93,7 @@ class uploadsService {
     return new Promise(async (resolve, reject) => {
       try {
         
-        await removeObjDuplic(reportData)
+        await findDuplicateObject(reportData)
         const dictionary = this.dictionary[reportName]
         let numeroFila = 2
         for (let fila of reportData) {

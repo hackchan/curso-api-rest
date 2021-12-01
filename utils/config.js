@@ -1,5 +1,32 @@
 const moment = require('moment')
 
+const findDuplicateObject = (reportData) =>{
+  return new Promise((resolve, reject)=>{
+    try {
+      let indice;
+      let findIndex;
+      let filtrados = reportData.filter((reportDataItem, reportDataIndice, reportDataArray) => {
+      findIndex = reportDataIndice;
+      indice = reportDataArray.findIndex((reportDataArrayItem) => {
+        return JSON.stringify(reportDataArrayItem) === JSON.stringify(reportDataItem)
+      })
+      return indice !== reportDataIndice;
+    })
+    
+    if(filtrados.length > 0) {
+      throw new Error(
+      `la fila=> ${indice + 2 } con la fila=> ${findIndex + 2} error=> se esta repitiendo la siguiente informacion ${JSON.stringify(filtrados)} `
+    )}
+    resolve(true)
+
+    } 
+    
+    catch (error) {
+     reject(error)  
+    }
+  })
+}
+
 const removeObjDuplic = (report) => {
   return new Promise((resolve, reject)=>{
     try {
@@ -185,5 +212,6 @@ module.exports = {
   validIsNumber,
   isValidData,
   validFormatDate,
-  removeObjDuplic
+  removeObjDuplic,
+  findDuplicateObject
 }
