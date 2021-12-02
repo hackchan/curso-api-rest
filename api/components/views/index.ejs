@@ -18,7 +18,7 @@
         <div class="col-xs-8 col-xs-offset-2">
           <h2 class="text-center">cargar excel</h2>
           <form
-            action="/api/uploads"
+            action="/uploads"
             method="post"
             enctype="multipart/form-data"
           >
@@ -41,30 +41,15 @@
                 class="form-select"
                 aria-label="Default select example"
               >
-                <optgroup label="Arauca">
-                  <% for(let entity of entidades.arauca) {%>
-                  <option value="<%=entity.identidad%>">
-                    <%=entity.nombre%>
+                <optgroup label="Reportes">
+                  <% for(let entity of reportes.reportes) {%>
+                  <option value="<%=entity.diccionario%>">
+                    <%=entity.id%>-<%=entity.nombre%>
                   </option>
                   <%}%>
                 </optgroup>
 
-                <optgroup label="Boyaca">
-                  <% for(let entity of entidades.boyaca) {%>
-                  <option value="<%=entity.identidad%>">
-                    <%=entity.nombre%>
-                  </option>
-                  <%}%>
-                </optgroup>
-
-                <optgroup label="Casanare">
-                  <% for(let entity of entidades.casanare)
-                  {%>
-                  <option value="<%=entity.identidad%>">
-                    <%=entity.nombre%>
-                  </option>
-                  <%}%>
-                </optgroup>
+             
               </select>
             </div>
 

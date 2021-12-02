@@ -10,11 +10,11 @@ const routers = (app) => {
   app.use('/api', router)
   router.use('/products', productos)
   router.use('/clients', clients)
-  router.use('/uploads', uploads)
   router.use('/entidad', entidad)
   router.use('/entidad', entidad)
   app.use('/', router)
   router.use('/', cliUI)
+  router.use('/uploads', uploads)
 }
 
 module.exports = routers

@@ -39,30 +39,37 @@ function loadingExcel(req, res, next) {
 
 async function loadingCSV(req, res, next) {
   try {
-    const codigoEntidad = req.body.entity
-    const entidad = await service.listarByOne(codigoEntidad)
+   const diccionarioSel = req.body.entity
+    //const entidad = await service.listarByOne(codigoEntidad)
     const serviceUpload = new uploadService(req.file)
-    const file = await serviceUpload.readfile()
+    //const file = await serviceUpload.readfile()
     const dataCSV = await serviceUpload.csvtojson()
     const header = dataCSV[0]
-    const headerClean = await serviceUpload.columnsHeader(header)
+    //const headerClean = await serviceUpload.columnsHeader(header)
     
 
    
     /**VALIDACIONES */
-    await serviceUpload.getValidTotalColumnas('ejecucionIngreso',header)
-    await serviceUpload.getValidNamesColumns('ejecucionIngreso',header)
-    await serviceUpload.getValidDatatype('ejecucionIngreso',dataCSV)
+    await serviceUpload.getValidTotalColumnas(diccionarioSel,header)
+    await serviceUpload.getValidNamesColumns(diccionarioSel,header)
+    await serviceUpload.getValidDatatype(diccionarioSel,dataCSV)
     
 
 
-    const configFile = await serviceUpload.getConfigFile(
-      headerClean,
-      entidad
-    )
-    res.send(configFile)
+    // const configFile = await serviceUpload.getConfigFile(
+    //   headerClean,
+    //   entidad
+    // )
+    res.render('infoOK', {
+      title: 'Archivo correcto',
+    })
+    //res.send(configFile)
   } catch (err) {
-    next(err)
+    console.log('lisa err:', err.Error)
+    res.render('error', {
+      title: 'Errores CSV',
+      err
+    })
   }
 }
 
