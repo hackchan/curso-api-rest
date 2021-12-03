@@ -17,7 +17,7 @@
       "tipo": "String",
       "coma": false,
       "valid": ["Actual", "Reservas", "CxP"],
-      "message": "Los valores deben aparecer sin espacios y con las mismas caracteristicas de mayusculas y minusculas, sin comillas, los valores validos son: Actual Reservas CxP2"
+      "message": "Los valores deben aparecer sin espacios y con las mismas caracteristicas de mayusculas y minusculas, sin comillas, los valores validos son: Actual Reservas CxP"
     },
     "nit_entidad_reportante": {
       "tipo": "Number",

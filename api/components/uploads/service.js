@@ -36,6 +36,9 @@ class uploadsService {
   async getValidNamesColumns(reportName, reportHeader) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('getValidNamesColumns')
+        console.log('reportName:', reportName)
+        console.log('reportHeader:', reportHeader)
         const totalColumHeader =
           Object.keys(reportHeader).length
         const totalColumnDic = Object.keys(
@@ -65,10 +68,20 @@ class uploadsService {
   async getValidTotalColumnas(reportName, reportHeader) {
     return new Promise(async (resolve, reject) => {
       try {
+        console.log('getValidTotalColumnas')
+        console.log('reportName:', reportName)
+        console.log('reportHeader:', reportHeader)
         const reportColumHeader = Object.keys(reportHeader)
         const columnsValids = Object.keys(
           this.dictionary[reportName]
         )
+        const totalColumsFile = reportColumHeader.length
+        const totalColumsDicc = columnsValids.length
+        if (totalColumsFile !== totalColumsDicc) {
+          throw new Error(
+            `la cantidad de columnas del archivo es de ${totalColumsFile} y no coincide con el total del diccionario de datos que son ${totalColumsDicc}`
+          )
+        }
         reportColumHeader.map((column, index) => {
           if (
             column.toLowerCase() !==
@@ -92,7 +105,6 @@ class uploadsService {
   async getValidDatatype(reportName, reportData) {
     return new Promise(async (resolve, reject) => {
       try {
-        
         await findDuplicateObject(reportData)
         const dictionary = this.dictionary[reportName]
         let numeroFila = 2
@@ -163,9 +175,9 @@ class uploadsService {
     try {
       const response = await csvtojson({
         delimiter: '|',
-        checkColumn: true,
+        checkColumn: false,
         noheader: false,
-        ignoreEmpty: true,
+        ignoreEmpty: false,
         trim: true,
         defaultEncoding: 'utf8',
         output: 'json'

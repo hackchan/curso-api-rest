@@ -1,60 +1,85 @@
 const moment = require('moment')
 
-const findDuplicateObject = (reportData) =>{
-  return new Promise((resolve, reject)=>{
+const findDuplicateObject = (reportData) => {
+  return new Promise((resolve, reject) => {
     try {
-      let fila1;
-      let fila2;
-      let filtrados = reportData.filter((reportDataItem, reportDataIndice, reportDataArray) => {
-        let indice = reportDataArray.findIndex((reportDataArrayItem) => {
-          return JSON.stringify(reportDataArrayItem) === JSON.stringify(reportDataItem)
-        })
-        let isIndx = indice !== reportDataIndice
-        if(isIndx){
-          fila1 = indice
-          fila2 = reportDataIndice
+      let fila1
+      let fila2
+      let filtrados = reportData.filter(
+        (
+          reportDataItem,
+          reportDataIndice,
+          reportDataArray
+        ) => {
+          let indice = reportDataArray.findIndex(
+            (reportDataArrayItem) => {
+              return (
+                JSON.stringify(reportDataArrayItem) ===
+                JSON.stringify(reportDataItem)
+              )
+            }
+          )
+          let isIndx = indice !== reportDataIndice
+          if (isIndx) {
+            fila1 = indice
+            fila2 = reportDataIndice
+          }
+          return isIndx
         }
-        return isIndx;
-    })
-    
-    if(filtrados.length > 0) {
-      throw new Error(
-      `la fila=> ${fila1 + 2 } con la fila=> ${fila2 + 2} error=> se esta repitiendo la siguiente informacion ${JSON.stringify(filtrados)} `
-    )}
-    resolve(true)
+      )
 
-    } 
-    
-    catch (error) {
-     reject(error)  
+      if (filtrados.length > 0) {
+        throw new Error(
+          `la fila=> ${fila1 + 2} con la fila=> ${
+            fila2 + 2
+          } error=> se esta repitiendo la siguiente informacion ${JSON.stringify(
+            filtrados
+          )} `
+        )
+      }
+      resolve(true)
+    } catch (error) {
+      reject(error)
     }
   })
 }
 
 const removeObjDuplic = (report) => {
-  return new Promise((resolve, reject)=>{
+  return new Promise((resolve, reject) => {
     try {
       let findIndex = 0
-      let filtrados = report.filter((actual, indice, arreglo)=>{
-          if(arreglo.findIndex((valorArreglo) =>{
-            return JSON.stringify(valorArreglo) === JSON.stringify(actual) 
-            })!== indice){
-              findIndex = indice
-            }
-          return arreglo.findIndex((valorArreglo) =>{
-                return JSON.stringify(valorArreglo) === JSON.stringify(actual) 
-                })!== indice
-   
-      })
+      let filtrados = report.filter(
+        (actual, indice, arreglo) => {
+          if (
+            arreglo.findIndex((valorArreglo) => {
+              return (
+                JSON.stringify(valorArreglo) ===
+                JSON.stringify(actual)
+              )
+            }) !== indice
+          ) {
+            findIndex = indice
+          }
+          return (
+            arreglo.findIndex((valorArreglo) => {
+              return (
+                JSON.stringify(valorArreglo) ===
+                JSON.stringify(actual)
+              )
+            }) !== indice
+          )
+        }
+      )
 
-      if(filtrados.length > 0){
+      if (filtrados.length > 0) {
         throw new Error(
-          `fila=> ${findIndex} error=> se esta repitiendo la siguiente informacion ${JSON.stringify(filtrados)} `
+          `fila=> ${findIndex} error=> se esta repitiendo la siguiente informacion ${JSON.stringify(
+            filtrados
+          )} `
         )
       }
-      
+
       resolve(true)
-      
     } catch (error) {
       reject(error)
     }
@@ -154,7 +179,15 @@ const isValidData = (
       if (regla.valid != 0 && Array.isArray(regla.valid)) {
         if (!regla.valid.includes(campo)) {
           throw new Error(
-            `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> debe contener uno de los siguientes valores ${regla.valid}`
+            `columna => ${
+              nombreColuma ? nombreColuma : 'vacio'
+            } fila=> ${
+              numeroFila ? numeroFila : 'vacio'
+            } valor=> ${
+              campo ? campo : 'vacio'
+            } error=> debe contener uno de los siguientes valores ${
+              regla.valid
+            }`
           )
         }
       }

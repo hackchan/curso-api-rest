@@ -30,4 +30,28 @@ router.post('/new-entry', (req, res) => {
   })
 })
 
+router.get('/dicci', (req, res) => {
+  res.render('diccionario', {
+    title: 'Diccionario'
+  })
+})
+
+router.get(
+  '/ejecucion-presupuestal-ingresos',
+  (req, res) => {
+    res.render('ejecucionIngreso', {
+      title: 'Ejecución presupuestal de ingresos'
+    })
+  }
+)
+
+router.get(
+  '/ejecucion-presupuestal-ingresos-ejemplo',
+  (req, res) => {
+    res.render('ejecucionIngresoVer', {
+      title: 'Ejecución presupuestal de ingresos'
+    })
+  }
+)
+
 module.exports = router

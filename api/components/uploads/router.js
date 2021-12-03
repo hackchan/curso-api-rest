@@ -37,24 +37,30 @@ function loadingExcel(req, res, next) {
   }
 }
 
-async function loadingCSV(req, res, next) {
+async function loadingCSV(req, res) {
   try {
-   const diccionarioSel = req.body.entity
+    console.log(req.file)
+    const diccionarioSel = req.body.entity
     //const entidad = await service.listarByOne(codigoEntidad)
     const serviceUpload = new uploadService(req.file)
     //const file = await serviceUpload.readfile()
     const dataCSV = await serviceUpload.csvtojson()
     const header = dataCSV[0]
     //const headerClean = await serviceUpload.columnsHeader(header)
-    
 
-   
     /**VALIDACIONES */
-    await serviceUpload.getValidTotalColumnas(diccionarioSel,header)
-    await serviceUpload.getValidNamesColumns(diccionarioSel,header)
-    await serviceUpload.getValidDatatype(diccionarioSel,dataCSV)
-    
-
+    await serviceUpload.getValidTotalColumnas(
+      diccionarioSel,
+      header
+    )
+    await serviceUpload.getValidNamesColumns(
+      diccionarioSel,
+      header
+    )
+    await serviceUpload.getValidDatatype(
+      diccionarioSel,
+      dataCSV
+    )
 
     // const configFile = await serviceUpload.getConfigFile(
     //   headerClean,
@@ -62,10 +68,10 @@ async function loadingCSV(req, res, next) {
     // )
     res.render('infoOK', {
       title: 'Archivo correcto',
+      file: req.file.originalname
     })
     //res.send(configFile)
   } catch (err) {
-    console.log('lisa err:', err.Error)
     res.render('error', {
       title: 'Errores CSV',
       err
