@@ -5,7 +5,7 @@
 }
 body {
   color: #444;
-  font-family: 'Arial';
+  font-family: 'Open Sans', sans-serif;
   font-size: 16px;
 }
 
@@ -44,25 +44,26 @@ header {
   height: 50vh;
   background: #424;
   color: white;
-  font-size: 50px;
+  font-size: 30px;
   display: flex;
   justify-content: center;
   align-items: center;
   align-self: center;
   border: 3px dotted white;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.2);
+  text-shadow: 0px 4px 5px rgba(255, 255, 255, 0.2);
 }
 
 .reportOK p span {
   color: #ff52a8;
-  font-size: 45px;
+  font-size: 25px;
   font-weight: bold;
 }
 
 .reportError {
   margin: 0;
   height: 50vh;
-  background: red;
+  background: #ff1f8f;
   color: white;
   font-size: 30px;
   display: flex;
@@ -72,6 +73,7 @@ header {
   flex-direction: column;
   border: 3px dotted white;
   box-shadow: 0px 8px 8px rgba(0, 0, 0, 0.2);
+  padding: 15px;
 }
 
 a {

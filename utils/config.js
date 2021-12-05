@@ -1,7 +1,30 @@
 const moment = require('moment')
 
+const findColumsExtra = (columsFile, columsDictionary) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      console.log('columsFile', columsFile)
+      console.log('columsDictionary', columsDictionary)
+      if (columsFile.length > columsDictionary.length) {
+        let difference = columsFile.filter(
+          (column) =>
+            !columsDictionary.includes(column.toLowerCase())
+        )
+        resolve(difference)
+      } else {
+        let difference = columsDictionary.filter(
+          (column) => !columsFile.includes(column)
+        )
+        resolve(difference)
+      }
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
 const findDuplicateObject = (reportData) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       let fila1
       let fila2
@@ -45,7 +68,7 @@ const findDuplicateObject = (reportData) => {
 }
 
 const removeObjDuplic = (report) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       let findIndex = 0
       let filtrados = report.filter(
@@ -87,7 +110,7 @@ const removeObjDuplic = (report) => {
 }
 
 const cleanJSON = (fila) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       let result = Object.keys(fila).reduce(
         (prev, current) => ({
@@ -109,12 +132,15 @@ const findNoExistComas = (
   campo,
   regla
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const tot = campo.split(',').length
       if (tot > 1) {
         throw new Error(
-          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> ${regla.message} `
+          `columna => ${nombreColuma}
+           fila    => ${numeroFila}
+           valor   => ${campo}
+           error   => ${regla.message} `
         )
       }
 
@@ -131,7 +157,7 @@ const validFormatDate = (
   campo,
   regla
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       if (
         !moment(
@@ -153,9 +179,9 @@ const validFormatDate = (
 }
 
 const validIsNumber = (numeroFila, nombreColuma, campo) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
-      if (!Number(campo)) {
+      if (!/^[0-9]+$/.test(campo)) {
         throw new Error(
           `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> Debe ser un valor numerico `
         )
@@ -174,7 +200,7 @@ const isValidData = (
   campo,
   regla
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       if (regla.valid != 0 && Array.isArray(regla.valid)) {
         if (!regla.valid.includes(campo)) {
@@ -204,7 +230,7 @@ const findSeparadorComa = (
   campo,
   regla
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const tot = campo.split(',').length
       if (tot > 2) {
@@ -226,12 +252,15 @@ const findSeparadorPunto = (
   campo,
   regla
 ) => {
-  return new Promise((resolve, reject) => {
+  return new Promise(async (resolve, reject) => {
     try {
       const tot = campo.split('.').length
       if (tot > 1) {
         throw new Error(
-          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> ${regla.message} `
+          `[ columna =>  ${nombreColuma} ]
+           [ fila    =>  ${numeroFila}   ]
+           [ valor   =>  ${campo}        ]
+           [ error   =>  ${regla.message}] `
         )
       }
       resolve(true)
@@ -250,5 +279,6 @@ module.exports = {
   isValidData,
   validFormatDate,
   removeObjDuplic,
-  findDuplicateObject
+  findDuplicateObject,
+  findColumsExtra
 }

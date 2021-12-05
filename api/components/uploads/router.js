@@ -23,7 +23,7 @@ const storage = multer.diskStorage({
 const upload = multer({
   storage,
   dest: 'public/uploads/',
-  limits: { fileSize: 9000000 }
+  limits: { fileSize: 90000000 }
 })
 
 router.get('/', loadingExcel)
@@ -41,6 +41,11 @@ async function loadingCSV(req, res) {
   try {
     console.log(req.file)
     const diccionarioSel = req.body.entity
+    if (!diccionarioSel || diccionarioSel === '') {
+      throw new Error(
+        'El diccionario seleccionado no esta disponible'
+      )
+    }
     //const entidad = await service.listarByOne(codigoEntidad)
     const serviceUpload = new uploadService(req.file)
     //const file = await serviceUpload.readfile()

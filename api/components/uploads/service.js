@@ -10,7 +10,8 @@ const {
   isValidData,
   validFormatDate,
   removeObjDuplic,
-  findDuplicateObject
+  findDuplicateObject,
+  findColumsExtra
 } = require('../../../utils/config')
 class uploadsService {
   constructor(file) {
@@ -78,8 +79,12 @@ class uploadsService {
         const totalColumsFile = reportColumHeader.length
         const totalColumsDicc = columnsValids.length
         if (totalColumsFile !== totalColumsDicc) {
+          // const diferencia = await findColumsExtra(
+          //   reportColumHeader,
+          //   columnsValids
+          // )
           throw new Error(
-            `la cantidad de columnas del archivo es de ${totalColumsFile} y no coincide con el total del diccionario de datos que son ${totalColumsDicc}`
+            `la cantidad de columnas del archivo es de ${totalColumsFile} y no coincide con el total del diccionario de datos que son ${totalColumsDicc}, si tiene la misma cantidad de columnas valide abriendo el archivo en excel y que no tenga una fila corrida.`
           )
         }
         reportColumHeader.map((column, index) => {
@@ -105,7 +110,8 @@ class uploadsService {
   async getValidDatatype(reportName, reportData) {
     return new Promise(async (resolve, reject) => {
       try {
-        await findDuplicateObject(reportData)
+        console.log('3). getValidDataType')
+        //await findDuplicateObject(reportData)
         const dictionary = this.dictionary[reportName]
         let numeroFila = 2
         for (let fila of reportData) {
@@ -162,9 +168,9 @@ class uploadsService {
               )
             }
           }
+          numeroFila++
         }
 
-        numeroFila++
         resolve(true)
       } catch (error) {
         reject(error)
