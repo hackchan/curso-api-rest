@@ -46,37 +46,37 @@
       "id": 8,
       "nombre": "Auxiliar con saldos",
       "categoria": "contable y financiera",
-      "diccionario": ""
+      "diccionario": "auxliarSaldos"
     },
     {
       "id": 9,
       "nombre": "Libro mayor y balance",
       "categoria": "contable y financiera",
-      "diccionario": ""
+      "diccionario": "libroMayor"
     },
     {
       "id": 10,
       "nombre": "Estado de situacion financiera",
       "categoria": "contable y financiera",
-      "diccionario": ""
+      "diccionario": "estadoFinanciero"
     },
     {
       "id": 11,
       "nombre": "programas y proyectos",
       "categoria": "programas y proyectos",
-      "diccionario": ""
+      "diccionario": "programasProyectos"
     },
     {
       "id": 12,
       "nombre": "Contratacion",
       "categoria": "Contratacion",
-      "diccionario": ""
+      "diccionario": "contratacion"
     },
     {
       "id": 13,
       "nombre": "Obras Publicas",
       "categoria": "Obras Publicas",
-      "diccionario": ""
+      "diccionario": "obras"
     }
   ]
 }

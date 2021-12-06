@@ -11,7 +11,9 @@ const {
   validFormatDate,
   removeObjDuplic,
   findDuplicateObject,
-  findColumsExtra
+  findColumsExtra,
+  validStringNoEmpty,
+  validStringNA
 } = require('../../../utils/config')
 class uploadsService {
   constructor(file) {
@@ -111,8 +113,11 @@ class uploadsService {
     return new Promise(async (resolve, reject) => {
       try {
         console.log('3). getValidDataType')
+        console.log('reportName:', reportName)
+        console.log('reportData:', reportData)
         //await findDuplicateObject(reportData)
         const dictionary = this.dictionary[reportName]
+        //console.log('diccionario:', dictionary)
         let numeroFila = 2
         for (let fila of reportData) {
           const filaClean = await cleanJSON(fila)
@@ -120,12 +125,16 @@ class uploadsService {
           for (let columna of filaKeys) {
             const campo = filaClean[columna]
             const regla = dictionary[columna]
+            console.log('columna ==>', columna)
+            console.log('campo==>', campo)
+            console.log('regla==>', regla)
             await isValidData(
               numeroFila,
               columna,
               campo,
               regla
             )
+
             if (regla.tipo === 'Number' && regla.coma) {
               await findSeparadorPunto(
                 numeroFila,
@@ -161,6 +170,19 @@ class uploadsService {
               )
             } else if (regla.tipo === 'Date') {
               await validFormatDate(
+                numeroFila,
+                columna,
+                campo,
+                regla
+              )
+            } else if (regla.tipo === 'String') {
+              await validStringNoEmpty(
+                numeroFila,
+                columna,
+                campo,
+                regla
+              )
+              await validStringNA(
                 numeroFila,
                 columna,
                 campo,

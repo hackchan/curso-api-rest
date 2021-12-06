@@ -46,6 +46,7 @@ async function loadingCSV(req, res) {
         'El diccionario seleccionado no esta disponible'
       )
     }
+    console.log('diccionario seleccionado:', diccionarioSel)
     //const entidad = await service.listarByOne(codigoEntidad)
     const serviceUpload = new uploadService(req.file)
     //const file = await serviceUpload.readfile()

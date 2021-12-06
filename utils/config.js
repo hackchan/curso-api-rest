@@ -167,10 +167,57 @@ const validFormatDate = (
         ).isValid()
       ) {
         throw new Error(
-          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> ${regla.message} `
+          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${
+            campo ? campo : 'vacio'
+          } error=> ${regla.message} `
         )
       }
 
+      resolve(true)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+const validStringNoEmpty = (
+  numeroFila,
+  nombreColuma,
+  campo
+) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!campo || campo.length === 0) {
+        throw new Error(
+          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${
+            campo ? campo : 'vacio'
+          } error=> No puede haber campos de texto vacios, recuerde el valor por defecto N/A`
+        )
+      }
+      resolve(true)
+    } catch (error) {
+      reject(error)
+    }
+  })
+}
+
+const validStringNA = (numeroFila, nombreColuma, campo) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (
+        !campo ||
+        campo === 'na' ||
+        campo === 'n/a' ||
+        campo === 'n/A' ||
+        campo === 'n A' ||
+        campo === 'N/a'
+      ) {
+        throw new Error(
+          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${
+            campo ? campo : 'vacio'
+          } error=> solo es valido el valor por defecto para texto => N/A`
+        )
+      }
       resolve(true)
     } catch (error) {
       reject(error)
@@ -183,7 +230,9 @@ const validIsNumber = (numeroFila, nombreColuma, campo) => {
     try {
       if (!/^[0-9]+$/.test(campo)) {
         throw new Error(
-          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${campo} error=> Debe ser un valor numerico `
+          `columna => ${nombreColuma} fila=> ${numeroFila} valor=> ${
+            campo ? campo : 'vacio'
+          } error=> Debe ser un valor numerico `
         )
       }
 
@@ -280,5 +329,7 @@ module.exports = {
   validFormatDate,
   removeObjDuplic,
   findDuplicateObject,
-  findColumsExtra
+  findColumsExtra,
+  validStringNoEmpty,
+  validStringNA
 }

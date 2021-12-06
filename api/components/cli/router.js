@@ -106,6 +106,18 @@ router.get('/programa-proyecto', (req, res) => {
   })
 })
 
+router.get('/contratacion', (req, res) => {
+  res.render('contratacion', {
+    title: 'Contratacion'
+  })
+})
+
+router.get('/obras', (req, res) => {
+  res.render('obras', {
+    title: 'Obras e Infraestructura'
+  })
+})
+
 router.get(
   '/ejecucion-presupuestal-ingresos-ejemplo',
   (req, res) => {
@@ -203,6 +215,14 @@ router.get('/contratacion-ejemplo', (req, res) => {
   const file = path.resolve(
     __dirname,
     '../../../public/CONTRATACION_20210131.xlsx'
+  )
+  res.download(file)
+})
+
+router.get('/obras-ejemplo', (req, res) => {
+  const file = path.resolve(
+    __dirname,
+    '../../../public/MATRIZ_SEGUIMIENTO_OBRAS_20210131.xlsx'
   )
   res.download(file)
 })
